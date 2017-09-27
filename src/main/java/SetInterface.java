@@ -10,17 +10,27 @@
 
 public interface SetInterface<E> {
 	
-
+    /** @precondition  -
+     *	@postcondition - set-POST is empty and has been returned.
+     **/
+    SetInterface<E> init();
+	
+	/**
+	 * @param index The index of the element in the set that gets checked.
+	 * @pre	-
+	 * @post A boolean is returned signifying whether said element is a BigInteger or not.
+	 */
+	boolean isBigInteger(int index);
+	
     /**
      * @pre -
      * @post The element E has been added at the end of the Set, preserving the previous order.
      */
     void add(E e);
 
-
     /**
      *
-     * @pre index < size() and index >= 0
+     * @pre	index < size() and index >= 0
      * @post The element at location 'index' has been removed, preserving the previous order. The size of the Set has been reduced by 1.
      */
     void remove(int index);
