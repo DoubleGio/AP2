@@ -1,24 +1,31 @@
-/**	@elements : key
+/**	@elements : character
  *	@structure : linear
- *	@domain : 	all rows of keys
- *	@constructor - Identifier(char[] input);
+ *	@domain : 	all rows of characters
+ *	@constructor - Identifier();
  *	<dl>
- *		<dt><b>PRE-conditie</b><dd>		An array of characters.
- *		<dt><b>POST-conditie</b><dd> 	A key.
+ *		<dt><b>PRE-conditie</b><dd>		-
+ *		<dt><b>POST-conditie</b><dd> 	An array of characters.
  * </dl>
  **/
 
-/**	@precondition	- A key has already been made out of a character array.
- *  @postcondition	- A character array made out of the key has been returned.
- **/
-
 public interface IdentifierInterface {
+	
 
+	/**	@precondition	- The character array that isn't empty.
+	 *  @postcondition	- The character array is returned.
+	 **/
 	char[] getValues();
 	
-    /**	@precondition	- 
-     *  @postcondition	
+    /** @precondition  -
+     *	@postcondition - identifier-POST is empty and has been returned.
      **/
-	//boolean isBigInteger(); 
+    IdentifierInterface init();
+    
+    /**
+     * @precondition   - A character array that isn't empty.
+     * @postcondition  - A hashcode: a key that corresponds with a specific character array.
+     */
+    @Override
+    int hashCode();
 
 }
