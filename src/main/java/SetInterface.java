@@ -3,8 +3,8 @@
  *	@domain : The given set of elements E
  *	@constructor - Set();
  *	<dl>
- *		<dt><b>PRE-conditie</b><dd>		-
- *		<dt><b>POST-conditie</b><dd> 	The new Set-object is an empty set.
+ *		<dt><b>PRE-condition</b><dd>		-
+ *		<dt><b>POST-condition</b><dd> 	The new Set-object is an empty set.
  * </dl>
  **/
 
@@ -17,34 +17,33 @@ public interface SetInterface<E> {
 	
     /**
      * @pre -
-     * @post The element E has been added at the end of the Set, preserving the previous order.
+     * @post The element E has been added at the end of the Set.
      */
     void add(E e);
 
     /**
      *
-     * @pre	index < size() and index >= 0
-     * @post The element at location 'index' has been removed, preserving the previous order. The size of the Set has been reduced by 1.
+     * @pre	The set is not empty.
+     * @post The specified element has been removed. The size of the Set has been reduced by 1.
      */
     void remove(E e);
 
     /**
      *
-     * @param index The index to be set
-     * @param token The value to set the element at location index to.
-     * @pre   index < size();
-     * @post  The element at location 'index' has the value 'e', preserving the previous order.
+     * @param e The element in the set that has to be replaced.
+     * @param d The element that has to be placed in the set, overwriting the previous element.
+     * @pre   The set is not empty.
+     * @post  The element e has been overwritten by the element d.
      */
     void set(E e, E d);
 
     /**
      *
-     * @param index The index of the element to be returned.
-     * @return The element and index index.
-     * @pre index < size();
-     * @post The element at index 'index' has been returned.
+     * @param e The element that has to be retrieved.
+     * @pre The set is not empty.
+     * @post A boolean specifying whether the element is present in the list.
      */
-    E get(E e);
+    boolean find(E e);
 
     /**
      * @pre -
@@ -52,7 +51,37 @@ public interface SetInterface<E> {
      */
     int size();
 	
+    /**
+     * @pre -
+     * @post A boolean specifying whether the set is empty.
+     */
     boolean isEmpty();
     
-    //set operations (like union etc)
+    /**
+     * 
+     * @pre -
+     * @post The union of 2 sets has been returned, or an error is has been thrown.
+     */
+    Set union(Set s);
+    
+    /**
+     * 
+     * @pre -
+     * @post The intersection of 2 sets has been returned, or an error is has been thrown.
+     */
+    Set intersection(Set s);
+    
+    /**
+     * 
+     * @pre -
+     * @post The complement of 2 sets has been returned, or an error is has been thrown.
+     */
+    Set complement(Set s);
+    
+    /**
+     * 
+     * @pre -
+     * @post The symmetric difference of 2 sets has been returned, or an error is has been thrown.
+     */
+    Set symmetricDifference(Set s);
 }
