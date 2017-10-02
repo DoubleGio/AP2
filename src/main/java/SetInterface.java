@@ -1,5 +1,5 @@
 /**	@elements : objects of type E
- *	@structure : linear
+ *	@structure : unknown
  *	@domain : The given set of elements E
  *	@constructor - Set();
  *	<dl>
@@ -15,13 +15,6 @@ public interface SetInterface<E> {
      **/
     SetInterface<E> init();
 	
-	/**
-	 * @param index The index of the element in the set that gets checked.
-	 * @pre	-
-	 * @post A boolean is returned signifying whether said element is a BigInteger or not.
-	 */
-	boolean isBigInteger(int index);
-	
     /**
      * @pre -
      * @post The element E has been added at the end of the Set, preserving the previous order.
@@ -33,7 +26,7 @@ public interface SetInterface<E> {
      * @pre	index < size() and index >= 0
      * @post The element at location 'index' has been removed, preserving the previous order. The size of the Set has been reduced by 1.
      */
-    void remove(int index);
+    void remove(E e);
 
     /**
      *
@@ -42,7 +35,7 @@ public interface SetInterface<E> {
      * @pre   index < size();
      * @post  The element at location 'index' has the value 'e', preserving the previous order.
      */
-    void set(int index, E e);
+    void set(E e, E d);
 
     /**
      *
@@ -51,7 +44,7 @@ public interface SetInterface<E> {
      * @pre index < size();
      * @post The element at index 'index' has been returned.
      */
-    E get(int index);
+    E get(E e);
 
     /**
      * @pre -
@@ -59,4 +52,7 @@ public interface SetInterface<E> {
      */
     int size();
 	
+    boolean isEmpty();
+    
+    //set operations (like union etc)
 }
