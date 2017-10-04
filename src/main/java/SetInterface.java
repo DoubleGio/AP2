@@ -62,26 +62,26 @@ public interface SetInterface<E> {
      * @pre -
      * @post The union of 2 sets has been returned, or an error is has been thrown.
      */
-    Set union(Set s);
+    SetInterface<E> union(SetInterface<E> s);
     
     /**
      * 
      * @pre -
      * @post The intersection of 2 sets has been returned, or an error is has been thrown.
      */
-    Set intersection(Set s);
+    SetInterface<E> intersection(SetInterface<E> s);
     
     /**
      * 
      * @pre -
      * @post The complement of 2 sets has been returned, or an error is has been thrown.
      */
-    Set complement(Set s);
+    SetInterface<E> complement(SetInterface<E> s);
     
     /**
      * 
      * @pre -
      * @post The symmetric difference of 2 sets has been returned, or an error is has been thrown.
      */
-    Set symmetricDifference(Set s);
+    SetInterface<E> symmetricDifference(SetInterface<E> s);
 }
