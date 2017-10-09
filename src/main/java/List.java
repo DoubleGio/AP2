@@ -20,7 +20,6 @@ public class List<E extends Comparable> implements ListInterface<E>{
             this.prior = prior;
             this.next = next;
         }
-
     }
     
     List() {
@@ -43,7 +42,7 @@ public class List<E extends Comparable> implements ListInterface<E>{
         return this;
     }
 
-    @Override
+   @Override
     public int size() {
         return size;
     }
@@ -57,7 +56,30 @@ public class List<E extends Comparable> implements ListInterface<E>{
 		currentNode = n;
     }
     
-	@SuppressWarnings("unchecked")
+    private void loopAndInsert(E d) {
+    	currentNode = firstNode;
+		while (currentNode != null) {
+			if (currentNode.data.compareTo(d) >= 1) {
+				if (currentNode == firstNode) {
+					Node n = new Node(d, null, currentNode);
+					firstNode.prior = n;
+					firstNode = n;
+				} else {
+					Node n = new Node(d, currentNode.prior, currentNode);
+					if (currentNode.prior == firstNode) {
+						firstNode.next = n;
+					}
+					if (currentNode == lastNode) {
+						lastNode.prior = n;
+					}
+					currentNode.prior.next = n;
+					currentNode.prior = n;
+				}
+			}
+			currentNode = currentNode.next;
+		}
+    }
+    
 	@Override
     public ListInterface<E> insert(E d) {
 		if (this.find(d)) {
@@ -69,33 +91,13 @@ public class List<E extends Comparable> implements ListInterface<E>{
     		currentNode = n;
     		lastNode = n;
     	} else {
-	    	if (firstNode.data.compareTo(d) == 1) {
-	    		Node n = new Node(d, null, firstNode);
-	    		currentNode = n;
-	    		firstNode.prior = n;
-	    		firstNode = n;
-	    	} 
-	    	if (lastNode.data.compareTo(d) == -1){		//WAAROM WERKT NIET BIJ 'c'.compareTo('f')???
+    		if (lastNode.data.compareTo(d) <= -1){
 	    		Node n = new Node(d, lastNode, null);
 	    		currentNode = n;
 	    		lastNode.next = n;
 	    		lastNode = n;
 	    	} else {
-	    		currentNode = firstNode;
-	    		while (currentNode != null) {
-	    			if (currentNode.data.compareTo(d) == -1 && currentNode.next.data.compareTo(d) == 1) {
-	    				Node n = new Node(d, currentNode, currentNode.next);
-	    				if (currentNode == firstNode) {
-	    					firstNode.next.prior = n;
-	    					firstNode.next = n;
-	    				}
-	    				currentNode.next.prior = n;
-	    				currentNode.next = n;
-	    				currentNode = n;
-	    			} else {
-	    				currentNode = currentNode.next;
-	    			}
-	    		}
+	    		loopAndInsert(d);
 	    	}
     	}
     	size++;
@@ -104,9 +106,6 @@ public class List<E extends Comparable> implements ListInterface<E>{
 
     @Override
     public E retrieve() {
-    	/*if (this.isEmpty()) {
-    		throw new APException("blabla");
-    	}*/
         return currentNode.data;
     }
 
