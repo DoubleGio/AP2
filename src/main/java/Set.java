@@ -1,8 +1,14 @@
-
-
 public class Set<E extends Comparable> implements SetInterface<E> {
 		
-		List list = new List();
+		ListInterface<E> list;
+		
+		Set () {
+			list = new List<E>();
+		}
+		
+		Set (List<E> l) {
+			//TODO: remove duplicates
+		}
 	    
 	    public Set<E> init(){
 	    	return null;
@@ -32,20 +38,23 @@ public class Set<E extends Comparable> implements SetInterface<E> {
 
 	    
 	    public int size(){
-	    	return list.size;
+	    	return list.size();
 	    }
 		
 	    
 	    public boolean isEmpty(){
 	    	return isEmpty();
 	    }
-	    
+	     
+	
 	   
-	    public Set union(Set s){
-	    	Set unionSet = new Set();
-	    	unionSet.list = (List) list.copy();
+	    public Set<E> union(Set<E> s){
+	    	Set<E> unionSet = new Set<E>();
+	    	unionSet.list = list.copy();
+	    	s.list.goToLast();
+	    	E temp = s.list.retrieve();
 	    	s.list.goToFirst();
-	    	while (s.list.currentNode != s.list.lastNode) {
+	    	while (s.list.retrieve() != temp) {
 	    		unionSet.list.insert(s.list.retrieve());
 	    		s.list.goToNext();
 	    	}
@@ -53,10 +62,12 @@ public class Set<E extends Comparable> implements SetInterface<E> {
 	    }
 	    
 	   
-	    public Set intersection(Set s){
-	    	Set intersectionSet = new Set();
+	    public Set<E> intersection(Set<E> s){
+	    	Set<E> intersectionSet = new Set<E>();
+	    	s.list.goToLast();
+	    	E temp = s.list.retrieve();
 	    	s.list.goToFirst();
-	    	while (s.list.currentNode != s.list.lastNode) {
+	    	while (s.list.retrieve() != temp) {
 	    		if (list.find(s.list.retrieve())) {
 	    			intersectionSet.list.insert(s.list.retrieve());
 	    		}
@@ -66,10 +77,12 @@ public class Set<E extends Comparable> implements SetInterface<E> {
 	    }
 	    
 	    
-	    public Set complement(Set s){
-	    	Set complementSet = new Set();
-	    	list.goToFirst();
-	    	while (list.currentNode != list.lastNode) {
+	    public Set<E> complement(Set<E> s){
+	    	Set<E> complementSet = new Set<E>();
+	    	s.list.goToLast();
+	    	E temp = s.list.retrieve();
+	    	s.list.goToFirst();
+	    	while (s.list.retrieve() != temp) {
 	    		if (!s.list.find(list.retrieve())) {
 	    			complementSet.list.insert(list.retrieve());
 	    		}
@@ -79,14 +92,17 @@ public class Set<E extends Comparable> implements SetInterface<E> {
 	    }
 	    
 	   
-	    public Set symmetricDifference(Set s){
-	    	Set sDSet = union(s);
-	    	Set intersectionSet = intersection(s);
+	    public Set<E> symmetricDifference(Set<E> s){
+	    	Set<E> sDSet = union(s);
+	    	Set<E> intersectionSet = intersection(s);
+	    	intersectionSet.list.goToLast();
+	    	E temp = intersectionSet.list.retrieve();
 	    	intersectionSet.list.goToFirst();
-	    	while (intersectionSet.list.currentNode != intersectionSet.list.lastNode) {
+	    	while (intersectionSet.list.retrieve() != temp) {
 	    		sDSet.list.find(intersectionSet.list.retrieve());
 	    		sDSet.list.remove();
 	    	}
 	    	return sDSet;
 	    }
+
 	}

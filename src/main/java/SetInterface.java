@@ -8,9 +8,9 @@
  * </dl>
  **/
 
-public interface SetInterface<E> {
+public interface SetInterface<E extends Comparable> {
 	
-    /** @precondition  -
+	/** @precondition  -
      *	@postcondition - set-POST is empty and has been returned.
      **/
     SetInterface<E> init();
@@ -62,26 +62,26 @@ public interface SetInterface<E> {
      * @pre -
      * @post The union of 2 sets has been returned, or an error is has been thrown.
      */
-    SetInterface<E> union(SetInterface<E> s);
+    SetInterface<E> union(Set<E> s);
     
     /**
      * 
      * @pre -
      * @post The intersection of 2 sets has been returned, or an error is has been thrown.
      */
-    SetInterface<E> intersection(SetInterface<E> s);
+    SetInterface<E> intersection(Set<E> s);
     
     /**
      * 
      * @pre -
      * @post The complement of 2 sets has been returned, or an error is has been thrown.
      */
-    SetInterface<E> complement(SetInterface<E> s);
+    SetInterface<E> complement(Set<E> s);
     
     /**
      * 
      * @pre -
      * @post The symmetric difference of 2 sets has been returned, or an error is has been thrown.
      */
-    SetInterface<E> symmetricDifference(SetInterface<E> s);
+    SetInterface<E> symmetricDifference(Set<E> s);
 }
