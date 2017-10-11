@@ -3,7 +3,7 @@ public class List<E extends Comparable> implements ListInterface<E>{
 	Node firstNode,
 		currentNode,
 		lastNode;
-	int size = 0;
+	int size;
 	
     private class Node {
 
@@ -23,7 +23,10 @@ public class List<E extends Comparable> implements ListInterface<E>{
     }
     
     List() {
-    	
+    	firstNode = null;
+    	currentNode = null;
+    	lastNode = null;
+    	size = 0;
     }
 
     @Override
@@ -42,56 +45,65 @@ public class List<E extends Comparable> implements ListInterface<E>{
         return this;
     }
 
-   @Override
+    @Override
     public int size() {
         return size;
     }
 
     private void addExisting(E d) {
-    	Node n = new Node(d, currentNode, currentNode.next);
-    	if (currentNode != lastNode) {
-    		currentNode.next.prior = n;
+    	if (currentNode == lastNode) {
+    		Node n = new Node(d, currentNode, null);
+    		currentNode.next = n;
+    		if (firstNode == lastNode) {
+    			firstNode.next = n;
+    		}
+    		currentNode = n;
+    		lastNode = n;
+    	} else {
+	    	Node n = new Node(d, currentNode, currentNode.next);
+	    	if (currentNode != lastNode) {
+	    		currentNode.next.prior = n;
+	    	}
+			currentNode.next = n;
+			currentNode = n;
     	}
-		currentNode.next = n;
-		currentNode = n;
     }
     
     private void loopAndInsert(E d) {
     	currentNode = firstNode;
-		while (currentNode != null) {
-			if (currentNode.data.compareTo(d) >= 1) {
-				if (currentNode == firstNode) {
-					Node n = new Node(d, null, currentNode);
-					firstNode.prior = n;
-					firstNode = n;
-				} else {
+    	if (currentNode.data.compareTo(d) >= 1) {
+    		Node n = new Node(d, null, currentNode);
+			firstNode.prior = n;
+			firstNode = n;
+			currentNode = n;
+    	} else {
+			while (goToNext()) {
+				if (currentNode.data.compareTo(d) >= 1) {	//if d is smaller than currentNode
 					Node n = new Node(d, currentNode.prior, currentNode);
+					currentNode.prior.next = n;
 					if (currentNode.prior == firstNode) {
 						firstNode.next = n;
 					}
 					if (currentNode == lastNode) {
 						lastNode.prior = n;
 					}
-					currentNode.prior.next = n;
 					currentNode.prior = n;
 				}
 			}
-			currentNode = currentNode.next;
-		}
+    	}
     }
     
-	@Override
+    @Override
     public ListInterface<E> insert(E d) {
 		if (this.find(d)) {
         	addExisting(d);
-    	} 
-		if (this.isEmpty()) {
+    	} else if (this.isEmpty()) {
     		Node n = new Node(d);
     		firstNode = n;
     		currentNode = n;
     		lastNode = n;
     	} else {
-    		if (lastNode.data.compareTo(d) <= -1){
+    		if (lastNode.data.compareTo(d) <= -1) {		//if d is larger than lastNode
 	    		Node n = new Node(d, lastNode, null);
 	    		currentNode = n;
 	    		lastNode.next = n;
@@ -141,6 +153,20 @@ public class List<E extends Comparable> implements ListInterface<E>{
     			return true;
     		}
     	}
+    	if (firstNode.data.compareTo(d) >= 1) {
+    		currentNode = firstNode;
+    	} else {
+    		currentNode = firstNode;
+    		while (currentNode.data.compareTo(d) <= -1) {
+    			if (this.goToNext() && currentNode.data.compareTo(d) >= 1) {
+    				currentNode = currentNode.prior;
+    				return false;
+    			}
+    			if (currentNode == lastNode) {
+    				return false;
+    			}
+    		}
+    	}
         return false;
     }
 
@@ -183,7 +209,7 @@ public class List<E extends Comparable> implements ListInterface<E>{
     		return true;
     	}
     }
-
+    
     @Override
     public ListInterface<E> copy() {
         return this;
