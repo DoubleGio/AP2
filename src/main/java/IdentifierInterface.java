@@ -11,10 +11,15 @@
 public interface IdentifierInterface {
 	
 
-	/**	@precondition	- The character array that isn't empty.
+	/**	@precondition	- The character array isn't empty.
 	 *  @postcondition	- The character array is returned.
 	 **/
 	char[] getValues();
+	
+	/** @precondition	- The character array isn't empty.
+	 * 	@postcondition	- The character array is returned as string.
+	 */
+	String getString();
 	
     /** @precondition  -
      *	@postcondition - identifier-POST is empty and has been returned.

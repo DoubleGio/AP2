@@ -1,22 +1,34 @@
-public class Set<E extends Comparable> implements SetInterface<E> {
+public class Set<E extends Comparable<E>> implements SetInterface<E> {
 		
-		ListInterface<E> list;
+		private ListInterface<E> list;
 		
 		Set () {
 			list = new List<E>();
 		}
 		
 		Set (List<E> l) {
-			//TODO: remove duplicates
+			//TODO: remove duplicates?
 		}
 	    
+		/*private void removeDuplicates(List<E> l) {
+			l.goToFirst();
+			while (l.goToNext()) {
+				if (l.retrieve() == l.retrievePrior()) {
+					l.goToPrevious();
+					l.remove();
+				}
+			}
+		}*/
+		
 	    public Set<E> init(){
 	    	return null;
 	    }
 		
 	    
 	    public void add(E e){
-	    	list.insert(e);
+	    	if (!find(e)) {
+	    		list.insert(e);
+	    	}
 	    }
 
 	    

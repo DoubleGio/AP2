@@ -11,7 +11,7 @@
  * </dl>
  **/
 
-public interface ListInterface<E extends Comparable> {
+public interface ListInterface<E extends Comparable<E>> {
 
     /**	@precondition -
      *  @postcondition - FALSE: list is not empty.
@@ -96,7 +96,7 @@ public interface ListInterface<E extends Comparable> {
 
 
     /** @precondition  -
-     *	@postcondition - FALSE: list is empty of current points to the first element
+     *	@postcondition - FALSE: list is empty or current points to the first element
      *     				TRUE:  current-POST points to the prior element of current-PRE
      */
     boolean goToPrevious();

@@ -1,9 +1,9 @@
-public class List<E extends Comparable> implements ListInterface<E>{
-
-	Node firstNode,
+public class List<E extends Comparable<E>> implements ListInterface<E>{
+ 
+	private Node firstNode,
 		currentNode,
 		lastNode;
-	int size;
+	private int size;
 	
     private class Node {
 
@@ -69,7 +69,7 @@ public class List<E extends Comparable> implements ListInterface<E>{
     	}
     }
     
-    private void loopAndInsert(E d) {
+	private void loopAndInsert(E d) {
     	currentNode = firstNode;
     	if (currentNode.data.compareTo(d) >= 1) {
     		Node n = new Node(d, null, currentNode);
@@ -119,6 +119,10 @@ public class List<E extends Comparable> implements ListInterface<E>{
     @Override
     public E retrieve() {
         return currentNode.data;
+    }
+    
+    public E retrievePrior() {
+    	return currentNode.prior.data;
     }
 
     @Override

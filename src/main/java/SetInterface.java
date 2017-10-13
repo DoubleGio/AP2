@@ -8,7 +8,7 @@
  * </dl>
  **/
 
-public interface SetInterface<E extends Comparable> {
+public interface SetInterface<E extends Comparable<E>> {
 	
 	/** @precondition  -
      *	@postcondition - set-POST is empty and has been returned.
