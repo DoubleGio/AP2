@@ -12,6 +12,13 @@ public class Main {
 			COMPLEMENT = '-',
 			SYM_DIFFERENCE = '|';
 	private static final int STANDARD_LENGTH = 100;
+	private HashMap<Identifier, Set<Integer>> hmap;
+	
+	private void skipSpaces(Scanner in) {
+		while(nextCharIs(in, ' ')) {
+			readChar(in);
+		}
+	}
 	
 	private char readChar(Scanner in) {
 		return in.next().charAt(0);
@@ -29,41 +36,65 @@ public class Main {
 		return in.hasNext("[a-zA-Z]");
 	}
 	
-	private void checkFactor(Scanner in, boolean print) throws APException {
-		readChar(in);
-		if (nextCharIs(in, ' ')) {
-			readChar(in);
-		} else if (nextCharIs(in, '{')) {	//Set
+	private void checkFactor(Scanner in) throws APException {
+		skipSpaces(in);
+		if (nextCharIs(in, '{')) {	//Set
 			readChar(in);
 			Set<Integer> s = readSet(in);
-			if (print) {
+			/*if (print) {
 				printSet(s);
-			}
+			}*/
 		} else if (nextCharIs(in, '(')) {	//Complex_factor, i.e.: (A+B)
-			
+			readChar(in);
+			checkExpression(in, false);
+			skipSpaces(in);
+			if (!nextCharIs(in, ')')) {
+				throw new APException("No closing brackets/n");
+			}
 		} else if (nextCharIsLetter(in)) {	//Identifier
 			char[] name = new char[STANDARD_LENGTH];
 			int index = -1;
-			while(nextCharIsLetter(in)) {
+			while(nextCharIsLetter(in) | nextCharIsDigit(in)) {
 				index++;
 				name[index] = readChar(in);
 			}
 			Identifier id = new Identifier(name);
-			if (print) {
-				if (in.hasNext()) {
-					checkExpression(in);
-					
-				} else {
-					printIdentifier(id);
-				}
-			}
+			
 		} else {
 			throw new APException("Wrong print syntax/n");
 		}
 	}
 	
-	private void checkExpression(Scanner in) {
-		
+	private void checkExpression(Scanner in, boolean print) throws APException {
+		checkTerm(in);
+		skipSpaces(in);
+		if (nextCharIs(in, UNION)) {
+			readChar(in);
+			checkTerm(in);
+			//TODO: union method
+		} else if (nextCharIs(in,  COMPLEMENT)) {
+			readChar(in);
+			checkTerm(in);
+			//TODO: complement method
+		} else if (nextCharIs(in, SYM_DIFFERENCE)) {
+			readChar(in);
+			checkTerm(in);
+			//TODO: sym difference method
+		}
+		if (print) {
+			//TODO: print a thing
+		}
+	}
+	
+	private void checkTerm(Scanner in) throws APException {
+		checkFactor(in);
+		skipSpaces(in);
+		if (nextCharIs(in, INTERSECTION)) {
+			readChar(in);
+			skipSpaces(in);
+			checkFactor(in);
+			//TODO: intersection method
+		}
 	}
 	
 	private void printSet(Set<Integer> s) {
@@ -72,6 +103,17 @@ public class Main {
 	
 	private void printIdentifier(Identifier id) {
 		
+	}
+	
+	private void checkForSpacesBetweenNumber(Scanner in) throws APException {
+		if (nextCharIs(in, ' ')) {
+			readChar(in);
+			if (nextCharIsDigit(in)) {
+				throw new APException("Space in between digits");
+			} else {
+				checkForSpacesBetweenNumber(in);
+			}
+		}
 	}
 	
 	private Set<Integer> readSet(Scanner in) throws APException {
@@ -87,13 +129,11 @@ public class Main {
 		    			digits = tempStack;
 				}
 				digits[index] = readChar(in);
+				checkForSpacesBetweenNumber(in);
 			} else if (nextCharIs(in, ',')) {
 				result.add(Integer.parseInt(new String(digits)));
-			} else if (nextCharIs(in, ' ')){
+			} else if (nextCharIs(in, ' ')) {
 				readChar(in);
-				if (nextCharIsDigit(in)) {
-					throw new APException("Space in between digits");
-				}
 			} else {
 				throw new APException("Incorrect character in set");
 			}
@@ -101,10 +141,10 @@ public class Main {
 		return result;
 	}
 	
-	
     private void start() throws APException {
         // Create a scanner on System.in
         Scanner in = new Scanner(System.in);
+        hmap = new HashMap<Identifier, Set<Integer>>();
         
         // While there is input, read line and parse it.
         while (in.hasNextLine()) {
@@ -113,13 +153,23 @@ public class Main {
 	        Scanner lineScanner = new Scanner(line);
 			in.useDelimiter("");
 			if (nextCharIs(lineScanner, COMMENT)) {
-				
+				//do nothing
 			} else if (nextCharIs(lineScanner, PRINT_STATEMENT)) {
-				checkFactor(lineScanner, true);
-				//print(lineScanner);
-				
+				readChar(lineScanner);
+				checkExpression(lineScanner, true);
 			} else if (nextCharIsLetter(lineScanner)) {
-				checkFactor(lineScanner, false);
+				checkFactor(lineScanner);
+				skipSpaces(lineScanner);
+				if (!nextCharIs(lineScanner, ASSIGNMENT)) {
+					throw new APException("'=' expected in assignment");
+				} else {
+					readChar(lineScanner);
+					skipSpaces(lineScanner);
+					checkExpression(lineScanner, false);
+					//TODO: assignment method
+				}
+			} else {
+				throw new APException("Empty line/n");
 			}
 	    	//HashMap<Identifier, Set<Integer>> hmap = new HashMap<Identifier, Set<Integer>>();
         }
