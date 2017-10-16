@@ -1,13 +1,19 @@
 
 public class Identifier implements IdentifierInterface {
 	
-	char[] name;
+	private char[] name;
 	
-	Identifier(char[] n) {
+	Identifier(char[] n) throws APException {
+		if (n.length == 0) {
+			throw new APException("Identifier cannot be empty/n");
+		}
 		name = n;
 	}
 	
-	Identifier(String s) {
+	Identifier(String s) throws APException {
+		if (s.isEmpty()) {
+			throw new APException("Identifier cannot be empty/n");
+		}
 		name = s.toCharArray();
 	}
 

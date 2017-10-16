@@ -7,10 +7,11 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 		}
 		
 		Set (List<E> l) {
-			//TODO: remove duplicates?
+			removeDuplicates(l);
+			list = l;
 		}
 	    
-		/*private void removeDuplicates(List<E> l) {
+		private void removeDuplicates(List<E> l) {
 			l.goToFirst();
 			while (l.goToNext()) {
 				if (l.retrieve() == l.retrievePrior()) {
@@ -18,7 +19,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 					l.remove();
 				}
 			}
-		}*/
+		}
 		
 	    public Set<E> init(){
 	    	return null;
@@ -35,12 +36,6 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    public void remove(E e){
 	    	list.find(e);
 	    	list.remove();
-	    }
-
-	    
-	    public void set(E e, E d){
-	    	remove(e);
-	    	add(d);
 	    }
 
 	    
@@ -116,5 +111,19 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    	}
 	    	return sDSet;
 	    }
-
+	    
+	    public String print() {
+	    	String result = "";
+	    	list.goToFirst();
+	    	result += list.retrieve().toString();
+	    	while (list.goToNext()) {
+	    		if (!list.goToNext()) {
+	    			result += list.retrieve().toString();
+	    		} else {
+	    			result += list.retrieve().toString() + " ";
+	    		}
+	    	}
+	    	return result;
+	    }
+	    
 	}

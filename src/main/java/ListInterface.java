@@ -13,7 +13,7 @@
 
 public interface ListInterface<E extends Comparable<E>> {
 
-    /**	@precondition -
+    /**	@precondition  -
      *  @postcondition - FALSE: list is not empty.
      *  				TRUE:  list is empty.
      **/
@@ -38,10 +38,15 @@ public interface ListInterface<E extends Comparable<E>> {
 
 
     /** @precondition  - The list is not empty.
-     *	@postcondition -The value of the current element has been returned.
+     *	@postcondition - The value of the current element has been returned.
      */
     E retrieve();
-
+    
+    /** @precondition  - The list contains 2 or more elements.
+     *  @postcondition - The value of the element prior to the current element has been returned.
+     */
+    E retrievePrior();
+    
 
     /** @precondition  - The list is not empty.
      * 	@postcondition - The current element of list-PRE is not present in list-POST.

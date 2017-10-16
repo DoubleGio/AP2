@@ -1,6 +1,6 @@
 /**	@elements : character
  *	@structure : linear
- *	@domain : 	all rows of characters
+ *	@domain : at least one letter, optionally followed by any amount alphanumeric characters
  *	@constructor - Identifier();
  *	<dl>
  *		<dt><b>PRE-conditie</b><dd>		-
