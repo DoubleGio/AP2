@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Identifier implements IdentifierInterface {
 	
@@ -40,5 +41,18 @@ public class Identifier implements IdentifierInterface {
 			result = result + (int) name[i] * 4;
 		}
 		return result;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+		if (!(o instanceof Identifier)) {
+			return false;
+		}
+		
+		Identifier i = (Identifier) o;
+		return Arrays.equals(name, i.name);
 	}
 }

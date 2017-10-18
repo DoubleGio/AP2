@@ -21,16 +21,22 @@ public interface IdentifierInterface {
 	 */
 	String getString();
 	
-    /** @precondition  -
-     *	@postcondition - identifier-POST is empty and has been returned.
+    /** @precondition  	-
+     *	@postcondition 	- identifier-POST is empty and has been returned.
      **/
     IdentifierInterface init();
     
-    /**
-     * @precondition   - A character array that isn't empty.
-     * @postcondition  - A hashcode: a key that corresponds with a specific character array.
+    /** @precondition   - A character array that isn't empty.
+     *  @postcondition  - A hashcode: a key that corresponds with a specific character array.
      */
     @Override
     int hashCode();
+    
+    /** @parameter o 	- The object to be compared.
+     *  @precondition	- Both identifiers aren't empty.
+     *  @postcondition	- Returns true if both are equal, false if not.
+     */
+    @Override
+    boolean equals(Object o);
 
 }
