@@ -96,6 +96,13 @@ public class Main {
 		out.printf("%s\n", s.print());
 	}
 	
+	private Identifier readIdentifier(Scanner in) throws APException {
+		String s = "";
+		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
+			s += readChar(in);
+		}
+		return new Identifier(s);
+	}
 	
 	private Set<BigInteger> readSet(Scanner in) throws APException {
 		Set<BigInteger> result = new Set<BigInteger>();
@@ -126,7 +133,7 @@ public class Main {
 	        String line = in.nextLine();
 	        
 	        Scanner lineScanner = new Scanner(line);
-			in.useDelimiter("");
+			lineScanner.useDelimiter("");
 			skipSpaces(lineScanner);
 			if (nextCharIs(lineScanner, COMMENT)) {
 				//do nothing
@@ -134,7 +141,7 @@ public class Main {
 				readChar(lineScanner);
 				printSet(checkExpression(lineScanner));
 			} else if (nextCharIsLetter(lineScanner)) {
-				Identifier id = new Identifier(in.next());
+				Identifier id = readIdentifier(lineScanner);
 				skipSpaces(lineScanner);
 				if (!nextCharIs(lineScanner, ASSIGNMENT)) {
 					throw new APException("'=' expected in assignment");
@@ -143,9 +150,9 @@ public class Main {
 					skipSpaces(lineScanner);
 					hmap.put(id, checkExpression(lineScanner));
 				}
-			} /*else {
+			} else {
 				throw new APException("Empty line\n");
-			}*/
+			}
         }
         in.close();
     }
