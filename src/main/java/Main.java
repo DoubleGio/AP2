@@ -96,7 +96,11 @@ public class Main {
 	private void printSet(Set<BigInteger> s) {
 		PrintStream out = new PrintStream(System.out);
 		out.printf("%d:", lineNumber);
-		out.printf("%s\n", s.print());
+		if (!s.isEmpty()) {
+			out.printf("%s\n", s.print());
+		} else {
+			out.println();
+		}
 	}
 	
 	private Identifier readIdentifier(Scanner in) throws APException {
@@ -109,7 +113,11 @@ public class Main {
 	
 	private Set<BigInteger> readSet(Scanner in) throws APException {
 		Set<BigInteger> result = new Set<BigInteger>();
-		while (!nextCharIs(in, '}')) {
+		skipSpaces(in);
+		if (nextCharIs(in, '}')) {
+			return result;
+		}
+		while (!nextCharIs(in, '}') ) {
 			skipSpaces(in);
 			if (!nextCharIsDigit(in)) {
 				throw new APException("Incorrect character in set\n");

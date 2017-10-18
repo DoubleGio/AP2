@@ -22,7 +22,10 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 		}
 		
 	    public Set<E> init(){
-	    	return null;
+	    	while (!isEmpty()) {
+	    		list.remove();
+	    	}
+	    	return this;
 	    }
 		
 	    
@@ -50,7 +53,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 		
 	    
 	    public boolean isEmpty(){
-	    	return isEmpty();
+	    	return size() == 0;
 	    }
 	     
 	

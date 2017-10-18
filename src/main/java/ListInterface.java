@@ -46,7 +46,6 @@ public interface ListInterface<E extends Comparable<E>> {
      *  @postcondition - The value of the element prior to the current element has been returned.
      */
     E retrievePrior();
-    
 
     /** @precondition  - The list is not empty.
      * 	@postcondition - The current element of list-PRE is not present in list-POST.
