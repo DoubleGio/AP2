@@ -52,11 +52,14 @@ public class Main {
 				throw new APException("No closing brackets\n");
 			}
 		} else if (nextCharIsLetter(in)) {				//Identifier
-			Identifier id = new Identifier(in.next());
+			Identifier id = readIdentifier(in);
+			if (hmap.containsKey("Aap")) {
+				System.out.println("yes");
+			}
 			temp = hmap.get(id);
-		} /*else {
+		} else {
 			throw new APException("Wrong print syntax\n");
-		}*/
+		}
 		return temp;
 	}
 	
@@ -115,8 +118,12 @@ public class Main {
 			skipSpaces(in);
 			if (nextCharIs(in, ',')) {
 				readChar(in);
-			} else {
-				throw new APException("Space in between digits\n");
+			} else if (!nextCharIs(in, '}')) {
+				if (nextCharIsDigit(in)) {
+					throw new APException("Space in between digits\n");
+				} else {
+					throw new APException("Incorrect character in set\n");
+				}
 			}
 		}
 		return result;
