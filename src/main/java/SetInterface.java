@@ -50,6 +50,11 @@ public interface SetInterface<E extends Comparable<E>> {
     
     /**
      * @precondition  -
+     * @postcondition A deep copy of the Set has been returned.
+     */
+    
+    /**
+     * @precondition  -
      * @postcondition The union of 2 sets has been returned, or an error is has been thrown.
      */
     SetInterface<E> union(Set<E> s);

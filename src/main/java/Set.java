@@ -1,24 +1,28 @@
 public class Set<E extends Comparable<E>> implements SetInterface<E> {
 		
-		private ListInterface<E> list;
+		private List<E> list;
 		
-		Set () {
+		Set() {
 			list = new List<E>();
 		}
 		
-		Set (List<E> l) {
-			removeDuplicates(l);
-			list = l;
+		Set(List<E> l) {
+			list = removeDuplicates(l);
+		}
+		
+		private Set(Set<E> s) {
+			this.list = s.list;
 		}
 	    
-		private void removeDuplicates(List<E> l) {
+		private List<E> removeDuplicates(List<E> l) {
 			l.goToFirst();
 			while (l.goToNext()) {
-				if (l.retrieve() == l.retrievePrior()) {
+				if (l.retrieve().equals(l.retrievePrior()) ) {
 					l.goToPrevious();
 					l.remove();
 				}
 			}
+			return l;
 		}
 		
 	    public Set<E> init(){
@@ -55,29 +59,44 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    public boolean isEmpty(){
 	    	return size() == 0;
 	    }
-	     
+	    
+	    public Set<E> copy() {
+	    	return new Set<E>(this);
+	    }
 	
 	   
 	    public Set<E> union(Set<E> s){
-	    	Set<E> unionSet = new Set<E>();
-	    	unionSet.list = list.copy();
-	    	s.list.goToLast();
-	    	E temp = s.list.retrieve();
-	    	s.list.goToFirst();
-	    	while (s.list.retrieve() != temp) {
-	    		unionSet.list.insert(s.list.retrieve());
-	    		s.list.goToNext();
+	    	Set<E> unionSet = this.copy();
+	    	Set<E> sCopy = s.copy();
+	    	if (s.isEmpty()) {
+	    		return copy();
 	    	}
+	    	if (this.isEmpty()) {
+	    		return s.copy();
+	    	}
+	    	if (s.isEmpty() && this.isEmpty()) {
+	    		return copy();
+	    	}
+	    	sCopy.list.goToFirst();
+	    	unionSet.list.insert(sCopy.list.retrieve());
+	    	while (sCopy.list.goToNext()) {
+	    		unionSet.list.insert(sCopy.list.retrieve());
+	    	}
+	    	unionSet.list = removeDuplicates(unionSet.list);
 	    	return unionSet;
 	    }
 	    
 	   
 	    public Set<E> intersection(Set<E> s){
 	    	Set<E> intersectionSet = new Set<E>();
-	    	s.list.goToLast();
-	    	E temp = s.list.retrieve();
+	    	if (s.isEmpty()) {
+	    		return s.copy();
+	    	}
 	    	s.list.goToFirst();
-	    	while (s.list.retrieve() != temp) {
+	    	if (list.find(s.list.retrieve())) {
+    			intersectionSet.list.insert(s.list.retrieve());
+    		}
+	    	while (s.list.goToNext()) {
 	    		if (list.find(s.list.retrieve())) {
 	    			intersectionSet.list.insert(s.list.retrieve());
 	    		}
@@ -89,10 +108,20 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    
 	    public Set<E> complement(Set<E> s){
 	    	Set<E> complementSet = new Set<E>();
-	    	s.list.goToLast();
-	    	E temp = s.list.retrieve();
-	    	s.list.goToFirst();
-	    	while (s.list.retrieve() != temp) {
+	    	if (this.isEmpty()) {
+	    		return s.copy();
+	    	}
+	    	if (s.isEmpty()) {
+	    		return this.copy();
+	    	}
+	    	if (this.isEmpty() && s.isEmpty()) {
+	    		return this.copy();
+	    	}
+	    	list.goToFirst();
+	    	if (!s.list.find(list.retrieve())) {
+    			complementSet.list.insert(list.retrieve());
+    		}
+	    	while (list.goToNext()) {
 	    		if (!s.list.find(list.retrieve())) {
 	    			complementSet.list.insert(list.retrieve());
 	    		}
@@ -103,37 +132,41 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    
 	   
 	    public Set<E> symmetricDifference(Set<E> s){
-	    	Set<E> sDSet = union(s);
-	    	Set<E> intersectionSet = intersection(s);
-	    	intersectionSet.list.goToLast();
-	    	E temp = intersectionSet.list.retrieve();
-	    	intersectionSet.list.goToFirst();
-	    	while (intersectionSet.list.retrieve() != temp) {
-	    		sDSet.list.find(intersectionSet.list.retrieve());
-	    		sDSet.list.remove();
+	    	Set<E> result = new Set<E>();
+	    	list.goToFirst();
+	    	if (!s.find(list.retrieve())) {
+	    		result.add(list.retrieve());
 	    	}
-	    	return sDSet;
+	    	while (list.goToNext()) {
+	    		if (!s.find(list.retrieve())) {
+		    		result.add(list.retrieve());
+		    	}
+	    	}
+	    	
+	    	s.list.goToFirst();
+	    	if (!list.find(s.list.retrieve())) {
+	    		result.add(s.list.retrieve());
+	    	}
+	    	while (s.list.goToNext()) {
+	    		if (!list.find(s.list.retrieve())) {
+		    		result.add(s.list.retrieve());
+		    	}
+	    	}
+	    	return result;
 	    }
 	    
 	    public String print() {
 	    	String result = "";
 	    	list.goToFirst();
-	    	if (containsOne()) {
+	    	if (list.size() == 1) {
 	    		result += list.retrieve().toString();
 	    	} else {
 	    		result += list.retrieve().toString() + " ";
+	    		while (list.goToNext()) {
+		    		result += list.retrieve().toString() + " ";
+		    	}
+		    	result = result.substring(0, result.length()-1);
 	    	}
-	    	while (list.goToNext()) {
-	    		result += list.retrieve().toString() + " ";
-	    	}
-	    	result = result.substring(0, result.length()-1);
 	    	return result;
-	    }
-	    
-	    private boolean containsOne() {
-	    	list.goToLast();
-	    	E e = list.retrieve();
-	    	list.goToFirst();
-	    	return e == list.retrieve();
 	    }
 	}
