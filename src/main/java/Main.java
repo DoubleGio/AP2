@@ -117,7 +117,29 @@ public class Main {
 		if (nextCharIs(in, '}')) {
 			return result;
 		}
-		while (!nextCharIs(in, '}') ) {
+		while (!nextCharIs(in, '}')) {
+			skipSpaces(in);
+			String number = "";
+			if (!nextCharIsDigit(in)) {
+				throw new APException("Incorrect character in set\n");
+			}
+			while (nextCharIsDigit(in)) {
+				number += readChar(in);
+			}
+			skipSpaces(in);
+			if (nextCharIsDigit(in)) {
+				throw new APException("Space in between digits\n");
+			} else if (nextCharIs(in, ',')) {
+				readChar(in);
+				result.add(new BigInteger(number));
+			} else if (nextCharIs(in, '}')) {
+				result.add(new BigInteger(number));
+			} else {
+				throw new APException("Incorrect character in set\n");
+			}
+		}
+		
+		/*while (!nextCharIs(in, '}') ) {
 			skipSpaces(in);
 			if (!nextCharIsDigit(in)) {
 				throw new APException("Incorrect character in set\n");
@@ -133,7 +155,7 @@ public class Main {
 					throw new APException("Incorrect character in set\n");
 				}
 			}
-		}
+		}*/
 		return result;
 	}
 		
