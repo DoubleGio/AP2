@@ -118,15 +118,22 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    public String print() {
 	    	String result = "";
 	    	list.goToFirst();
-	    	result += list.retrieve().toString();
-	    	while (list.goToNext()) {
-	    		if (!list.goToNext()) {
-	    			result += list.retrieve().toString();
-	    		} else {
-	    			result += list.retrieve().toString() + " ";
-	    		}
+	    	if (containsOne()) {
+	    		result += list.retrieve().toString();
+	    	} else {
+	    		result += list.retrieve().toString() + " ";
 	    	}
+	    	while (list.goToNext()) {
+	    		result += list.retrieve().toString() + " ";
+	    	}
+	    	result = result.substring(0, result.length()-1);
 	    	return result;
 	    }
 	    
+	    private boolean containsOne() {
+	    	list.goToLast();
+	    	E e = list.retrieve();
+	    	list.goToFirst();
+	    	return e == list.retrieve();
+	    }
 	}

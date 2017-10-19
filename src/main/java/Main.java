@@ -138,24 +138,6 @@ public class Main {
 				throw new APException("Incorrect character in set\n");
 			}
 		}
-		
-		/*while (!nextCharIs(in, '}') ) {
-			skipSpaces(in);
-			if (!nextCharIsDigit(in)) {
-				throw new APException("Incorrect character in set\n");
-			}
-			result.add(in.nextBigInteger());
-			skipSpaces(in);
-			if (nextCharIs(in, ',')) {
-				readChar(in);
-			} else if (!nextCharIs(in, '}')) {
-				if (nextCharIsDigit(in)) {
-					throw new APException("Space in between digits\n");
-				} else {
-					throw new APException("Incorrect character in set\n");
-				}
-			}
-		}*/
 		return result;
 	}
 		

@@ -88,6 +88,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 						lastNode.prior = n;
 					}
 					currentNode.prior = n;
+					break;
 				}
 			}
     	}
