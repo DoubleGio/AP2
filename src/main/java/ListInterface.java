@@ -29,7 +29,9 @@ public interface ListInterface<E extends Comparable<E>> {
      **/
     int size();
 
-    /** @precondition  -
+    /** 
+     *  @param d The element that has to be inserted in the List.
+     *  @precondition  -
      *	@postcondition - Element d has been added to List-PRE.
      *    				current points to the newly added element.
      *   				list-POST has been returned.
@@ -37,17 +39,20 @@ public interface ListInterface<E extends Comparable<E>> {
     ListInterface<E> insert(E d);
 
 
-    /** @precondition  - The list is not empty.
+    /** 
+     *  @precondition  - The list is not empty.
      *	@postcondition - The value of the current element has been returned.
      */
     E retrieve();
     
-    /** @precondition  - The list contains 2 or more elements.
+    /** 
+     *  @precondition  - The list contains 2 or more elements.
      *  @postcondition - The value of the element prior to the current element has been returned.
      */
     E retrievePrior();
 
-    /** @precondition  - The list is not empty.
+    /** 
+     *  @precondition  - The list is not empty.
      * 	@postcondition - The current element of list-PRE is not present in list-POST.
      * 	    			current-POST points to
      *    					- if list-POST is empty
@@ -61,8 +66,9 @@ public interface ListInterface<E extends Comparable<E>> {
      **/
     ListInterface<E> remove();
 
-
-    /** @precondition  -
+    /** 
+     *  @param d The element that has to be found in the List.
+     *  @precondition  -
      *	@postcondition - TRUE:  The list contains the element d.
      *	     			current-POST points to the first element in list that
      *	     			contains the element d.
@@ -77,29 +83,29 @@ public interface ListInterface<E extends Comparable<E>> {
      **/
     boolean find(E d);
 
-
-    /** @precondition  -
+    /** 
+     *  @precondition  -
      *	@postcondition - FALSE: list is empty
      *    				TRUE:  current points to the first element
      **/
     boolean goToFirst();
 
-
-    /**	@precondition  -
+    /**	
+     *  @precondition  -
      *	@postcondition - FALSE: list is empty
      *     				TRUE:  current points to the last element
      */
     boolean goToLast();
 
-
-    /** @precondition  -
+    /** 
+     *  @precondition  -
      *	@postcondition - FALSE: list is empty or current points to the last element
      *     				TRUE:  current-POST points to the next element of current-PRE
      */
     boolean goToNext();
 
-
-    /** @precondition  -
+    /** 
+     *  @precondition  -
      *	@postcondition - FALSE: list is empty or current points to the first element
      *     				TRUE:  current-POST points to the prior element of current-PRE
      */
@@ -110,7 +116,4 @@ public interface ListInterface<E extends Comparable<E>> {
      * @postcondition A deep copy of the list has been returned.
      */
     ListInterface<E> copy();
-
-
-
 }
