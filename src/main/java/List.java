@@ -28,13 +28,6 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
     	lastNode = null;
     	size = 0;
     }
-    
-    private List(List<E> l) {
-    	this.firstNode = l.firstNode;
-    	this.currentNode = l.currentNode;
-    	this.lastNode = l.lastNode;
-    	this.size = l.size;
-    }
 
     @Override
     public boolean isEmpty() {
@@ -70,9 +63,6 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 	    	Node n = new Node(d, currentNode, currentNode.next);
 	    	if (currentNode != lastNode) {
 	    		currentNode.next.prior = n;
-	    	}
-	    	if (currentNode == firstNode) {
-	    		firstNode.next = n;
 	    	}
 			currentNode.next = n;
 			currentNode = n;
@@ -145,10 +135,6 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
     		currentNode.prior.next = null;
     		currentNode = currentNode.prior;
     		lastNode = currentNode;
-    	} else if (currentNode == firstNode) {
-    		currentNode.next.prior = null;
-    		currentNode = currentNode.next;
-    		firstNode = currentNode;
     	} else {
     		currentNode.prior.next = currentNode.next;
     		currentNode.next.prior = currentNode.prior;
@@ -163,10 +149,10 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
     	if (this.isEmpty()) {
     		return false;
     	}
-    	currentNode = firstNode;
     	if (firstNode.data.compareTo(d) == 0) {
     		return true;
     	}
+    	currentNode = firstNode;
     	while (goToNext()) {
     		if (currentNode.data.compareTo(d) == 0) {
     			return true;
@@ -230,7 +216,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
     }
     
     @Override
-    public List<E> copy() {
-        return new List<E>(this) ;
+    public ListInterface<E> copy() {
+        return this;
     }
 }
