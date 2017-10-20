@@ -12,9 +12,12 @@ public class Main {
 			INTERSECTION = '*',
 			COMPLEMENT = '-',
 			SYM_DIFFERENCE = '|';
-	private int lineNumber = 0;
 	private HashMap<Identifier, Set<BigInteger>> hmap;
+	private static PrintStream out;
 	
+	Main() {
+		out = new PrintStream(System.out);
+	}
 	
 	private void skipSpaces(Scanner in) {
 		while(nextCharIs(in, ' ')) {
@@ -49,14 +52,19 @@ public class Main {
 			temp = checkExpression(in);
 			skipSpaces(in);
 			if (!nextCharIs(in, ')')) {
-				throw new APException("No closing brackets\n");
+				throw new APException("No closing brackets");
 			}
 			readChar(in);
 		} else if (nextCharIsLetter(in)) {				//Identifier
 			Identifier id = readIdentifier(in);
-			temp = hmap.get(id).copy();
+			if (hmap.containsKey(id)) {
+				temp = hmap.get(id).copy();
+			} else {
+				throw new APException("Unknown Identifier");
+			}
+			
 		} else {
-			throw new APException("Wrong print syntax\n");
+			throw new APException("Wrong print syntax");
 		}
 		return temp;
 	}
@@ -64,18 +72,21 @@ public class Main {
 	private Set<BigInteger> checkExpression(Scanner in) throws APException {
 		Set<BigInteger> temp = checkTerm(in);
 		skipSpaces(in);
-		if (nextCharIs(in, UNION)) {
-			readChar(in);
+		while (nextCharIs(in, UNION) || nextCharIs(in,  COMPLEMENT) || nextCharIs(in, SYM_DIFFERENCE)) {
+			if (nextCharIs(in, UNION)) {
+				readChar(in);
+				skipSpaces(in);
+				temp = temp.union(checkTerm(in));
+			} else if (nextCharIs(in,  COMPLEMENT)) {
+				readChar(in);
+				skipSpaces(in);
+				temp = temp.complement(checkTerm(in));
+			} else if (nextCharIs(in, SYM_DIFFERENCE)) {
+				readChar(in);
+				skipSpaces(in);
+				temp = temp.symmetricDifference(checkTerm(in));
+			}
 			skipSpaces(in);
-			temp = temp.union(checkTerm(in));
-		} else if (nextCharIs(in,  COMPLEMENT)) {
-			readChar(in);
-			skipSpaces(in);
-			temp = temp.complement(checkTerm(in));
-		} else if (nextCharIs(in, SYM_DIFFERENCE)) {
-			readChar(in);
-			skipSpaces(in);
-			temp = temp.symmetricDifference(checkTerm(in));
 		}
 		return temp;
 	}
@@ -83,17 +94,16 @@ public class Main {
 	private Set<BigInteger> checkTerm(Scanner in) throws APException {
 		Set<BigInteger> temp = checkFactor(in);
 		skipSpaces(in);
-		if (nextCharIs(in, INTERSECTION)) {
+		while (nextCharIs(in, INTERSECTION)) {
 			readChar(in);
 			skipSpaces(in);
 			temp = temp.intersection(checkFactor(in));
+			skipSpaces(in);
 		}
 		return temp;
 	}
 	
 	private void printSet(Set<BigInteger> s) {
-		PrintStream out = new PrintStream(System.out);
-		out.printf("%d:", lineNumber);
 		if (!s.isEmpty()) {
 			out.printf("%s\n", s.print());
 		} else {
@@ -113,27 +123,41 @@ public class Main {
 		Set<BigInteger> result = new Set<BigInteger>();
 		skipSpaces(in);
 		if (nextCharIs(in, '}')) {
+			readChar(in);
 			return result;
 		}
 		while (!nextCharIs(in, '}')) {
 			skipSpaces(in);
 			String number = "";
 			if (!nextCharIsDigit(in)) {
-				throw new APException("Incorrect character in set\n");
+				throw new APException("Incorrect character in set");
 			}
 			while (nextCharIsDigit(in)) {
-				number += readChar(in);
+				if (number.isEmpty() && nextCharIs(in, '0')) {
+					char c = readChar(in);
+					if (nextCharIsDigit(in)) {
+						throw new APException("Character other than '}' or ',' after a 0 not allowed");
+					} else {
+						number += c;
+					}
+				} else {
+					number += readChar(in);
+				}
 			}
 			skipSpaces(in);
 			if (nextCharIsDigit(in)) {
-				throw new APException("Space in between digits\n");
+				throw new APException("Space in between digits");
 			} else if (nextCharIs(in, ',')) {
 				readChar(in);
+				skipSpaces(in);
+				if (!nextCharIsDigit(in)) {
+					throw new APException("Digit expected after ','");
+				}
 				result.add(new BigInteger(number));
 			} else if (nextCharIs(in, '}')) {
 				result.add(new BigInteger(number));
 			} else {
-				throw new APException("Incorrect character in set\n");
+				throw new APException("Incorrect character in set");
 			}
 		}
 		readChar(in);
@@ -147,35 +171,50 @@ public class Main {
         
         // While there is input, read line and parse it.
         while (in.hasNextLine()) {
-        	lineNumber++;
-	        String line = in.nextLine();
-	        
-	        Scanner lineScanner = new Scanner(line);
-			lineScanner.useDelimiter("");
-			skipSpaces(lineScanner);
-			if (nextCharIs(lineScanner, COMMENT)) {
-				//do nothing
-			} else if (nextCharIs(lineScanner, PRINT_STATEMENT)) {
-				readChar(lineScanner);
-				printSet(checkExpression(lineScanner).copy());
-			} else if (nextCharIsLetter(lineScanner)) {
-				Identifier id = readIdentifier(lineScanner);
+        	try {
+		        String line = in.nextLine(); 
+		        Scanner lineScanner = new Scanner(line);
+		        
+				
+		        lineScanner.useDelimiter("");
 				skipSpaces(lineScanner);
-				if (!nextCharIs(lineScanner, ASSIGNMENT)) {
-					throw new APException("'=' expected in assignment");
-				} else {
+				if (nextCharIs(lineScanner, COMMENT)) {
+					//do nothing
+				} else if (nextCharIs(lineScanner, PRINT_STATEMENT)) {
 					readChar(lineScanner);
+					Set<BigInteger> s = checkExpression(lineScanner);
 					skipSpaces(lineScanner);
-					hmap.put(id, checkExpression(lineScanner));
+					if (lineScanner.hasNext()) {
+						throw new APException("Incorrect Syntax");
+					}
+					printSet(s);
+				} else if (nextCharIsLetter(lineScanner)) {
+					Identifier id = readIdentifier(lineScanner);
+					skipSpaces(lineScanner);
+					if (!nextCharIs(lineScanner, ASSIGNMENT)) {
+						throw new APException("'=' expected in assignment");
+					} else {
+						readChar(lineScanner);
+						skipSpaces(lineScanner);
+						Set<BigInteger> s = checkExpression(lineScanner);
+						skipSpaces(lineScanner);
+						if (lineScanner.hasNext()) {
+							throw new APException("Incorrect Syntax");
+						}
+						hmap.put(id, s);
+					}
+				} else {
+					throw new APException("Empty line");
 				}
-			} else {
-				throw new APException("Empty line\n");
-			}
+        	} catch (APException e) {
+        		out.println(e);
+        	}
+        
         }
         in.close();
     }
 
     public static void main(String[] argv) throws APException {
-        new Main().start();
+    	new Main().start();
     }
 }

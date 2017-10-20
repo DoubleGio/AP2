@@ -9,10 +9,6 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 		Set(List<E> l) {
 			list = removeDuplicates(l);
 		}
-		
-		private Set(Set<E> s) {
-			this.list = s.list;
-		}
 	    
 		private List<E> removeDuplicates(List<E> l) {
 			l.goToFirst();
@@ -61,7 +57,16 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    }
 	    
 	    public Set<E> copy() {
-	    	return new Set<E>(this);
+	    	Set<E> copySet = new Set<E>();
+	    	if (this.isEmpty()) {
+	    		return copySet;
+	    	}
+	    	this.list.goToFirst();
+	    	copySet.add(this.list.retrieve());
+	    	while (this.list.goToNext()) {
+	    		copySet.add(this.list.retrieve());
+	    	}
+	    	return copySet;
 	    }
 	
 	   
@@ -89,69 +94,58 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	   
 	    public Set<E> intersection(Set<E> s){
 	    	Set<E> intersectionSet = new Set<E>();
-	    	if (s.isEmpty()) {
-	    		return s.copy();
+	    	Set<E> tCopy = this.copy();
+	    	Set<E> sCopy = s.copy();
+	    	if (tCopy.isEmpty()) {
+	    		return tCopy;
 	    	}
-	    	s.list.goToFirst();
-	    	if (list.find(s.list.retrieve())) {
-    			intersectionSet.list.insert(s.list.retrieve());
+	    	if (sCopy.isEmpty()) {
+	    		return sCopy;
+	    	}
+	    	sCopy.list.goToFirst();
+	    	if (tCopy.list.find(sCopy.list.retrieve())) {
+    			intersectionSet.list.insert(sCopy.list.retrieve());
     		}
-	    	while (s.list.goToNext()) {
-	    		if (list.find(s.list.retrieve())) {
-	    			intersectionSet.list.insert(s.list.retrieve());
+	    	while (sCopy.list.goToNext()) {
+	    		if (tCopy.list.find(sCopy.list.retrieve())) {
+	    			intersectionSet.list.insert(sCopy.list.retrieve());
 	    		}
-	    		s.list.goToNext();
 	    	}
 	    	return intersectionSet;
 	    }
 	    
 	    
 	    public Set<E> complement(Set<E> s){
-	    	Set<E> complementSet = new Set<E>();
-	    	if (this.isEmpty()) {
-	    		return s.copy();
+	    	Set<E> complementSet = this.copy();
+	    	Set<E> sCopy = s.copy();
+	    	if (this.isEmpty() || s.isEmpty()) {
+	    		return complementSet;
 	    	}
-	    	if (s.isEmpty()) {
-	    		return this.copy();
+	    	sCopy.list.goToFirst();
+	    	if (complementSet.find(sCopy.list.retrieve())) {
+	    		complementSet.list.remove();
 	    	}
-	    	if (this.isEmpty() && s.isEmpty()) {
-	    		return this.copy();
-	    	}
-	    	list.goToFirst();
-	    	if (!s.list.find(list.retrieve())) {
-    			complementSet.list.insert(list.retrieve());
-    		}
-	    	while (list.goToNext()) {
-	    		if (!s.list.find(list.retrieve())) {
-	    			complementSet.list.insert(list.retrieve());
-	    		}
-	    		list.goToNext();
+	    	while(sCopy.list.goToNext()) {
+	    		if (complementSet.find(sCopy.list.retrieve())) {
+		    		complementSet.list.remove();
+		    	}
 	    	}
 	    	return complementSet; 
 	    }
 	    
 	   
 	    public Set<E> symmetricDifference(Set<E> s){
-	    	Set<E> result = new Set<E>();
-	    	list.goToFirst();
-	    	if (!s.find(list.retrieve())) {
-	    		result.add(list.retrieve());
+	    	Set<E> tCopy = this.copy();
+	    	Set<E> sCopy = s.copy();
+	    	if (this.isEmpty()) {
+	    		return sCopy;
 	    	}
-	    	while (list.goToNext()) {
-	    		if (!s.find(list.retrieve())) {
-		    		result.add(list.retrieve());
-		    	}
+	    	if (s.isEmpty()) {
+	    		return tCopy;
 	    	}
-	    	
-	    	s.list.goToFirst();
-	    	if (!list.find(s.list.retrieve())) {
-	    		result.add(s.list.retrieve());
-	    	}
-	    	while (s.list.goToNext()) {
-	    		if (!list.find(s.list.retrieve())) {
-		    		result.add(s.list.retrieve());
-		    	}
-	    	}
+	    	Set<E> complement1 = tCopy.complement(sCopy);
+	    	Set<E> complement2 = sCopy.complement(tCopy);
+	    	Set<E> result = complement1.union(complement2);
 	    	return result;
 	    }
 	    
