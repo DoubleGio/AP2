@@ -141,16 +141,6 @@ public class Main {
 		return number;
 	}
 
-	private Identifier readIdentifier(Scanner in) throws APException {
-		String s = "";
-		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
-			s += readChar(in);
-		}
-		return new Identifier(s);
-	}
-	
-	
-	
 	private void addNumber(Scanner in, Set<BigInteger> result, String number) throws APException {
 		if (nextCharIsDigit(in)) {
 			throw new APException("Space in between digits");
@@ -169,6 +159,17 @@ public class Main {
 	}
 
 	
+	private Identifier readIdentifier(Scanner in) throws APException {
+		String s = "";
+		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
+			s += readChar(in);
+		}
+		return new Identifier(s);
+	}	
+	
+	
+	
+
 	private void printStatement(Scanner in) throws APException {
 		readChar(in);
 		Set<BigInteger> s = checkExpression(in);
