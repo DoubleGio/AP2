@@ -28,29 +28,24 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    	return this;
 	    }
 		
-	    
 	    public void add(E e){
 	    	if (!find(e)) {
 	    		list.insert(e);
 	    	}
 	    }
-
 	    
 	    public void remove(E e){
 	    	list.find(e);
 	    	list.remove();
 	    }
-
 	    
 	    public boolean find(E e){
 	    	return list.find(e);
 	    }
-
 	    
 	    public int size(){
 	    	return list.size();
-	    }
-		
+	    }		
 	    
 	    public boolean isEmpty(){
 	    	return size() == 0;
@@ -67,8 +62,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    		copySet.add(this.list.retrieve());
 	    	}
 	    	return copySet;
-	    }
-	
+	    }	
 	   
 	    public Set<E> union(Set<E> s){
 	    	Set<E> unionSet = this.copy();
@@ -89,8 +83,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    	}
 	    	unionSet.list = removeDuplicates(unionSet.list);
 	    	return unionSet;
-	    }
-	    
+	    }	    
 	   
 	    public Set<E> intersection(Set<E> s){
 	    	Set<E> intersectionSet = new Set<E>();
@@ -112,8 +105,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 	    		}
 	    	}
 	    	return intersectionSet;
-	    }
-	    
+	    }	    
 	    
 	    public Set<E> complement(Set<E> s){
 	    	Set<E> complementSet = this.copy();
@@ -131,8 +123,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
 		    	}
 	    	}
 	    	return complementSet; 
-	    }
-	    
+	    }	    
 	   
 	    public Set<E> symmetricDifference(Set<E> s){
 	    	Set<E> tCopy = this.copy();
