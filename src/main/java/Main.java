@@ -25,6 +25,7 @@ public class Main {
 		}
 	}
 	
+	
 	private char readChar(Scanner in) {
 		return in.next().charAt(0);
 	}
@@ -41,33 +42,6 @@ public class Main {
 		return in.hasNext("[a-zA-Z]");
 	}
 	
-	private Set<BigInteger> checkFactor(Scanner in) throws APException {
-		Set<BigInteger> temp = new Set<BigInteger>();
-		skipSpaces(in);
-		if (nextCharIs(in, '{')) {						//Set
-			readChar(in);
-			temp = readSet(in);
-		} else if (nextCharIs(in, '(')) {				//Complex_factor, i.e.: (A+B)
-			readChar(in);
-			temp = checkExpression(in);
-			skipSpaces(in);
-			if (!nextCharIs(in, ')')) {
-				throw new APException("No closing brackets");
-			}
-			readChar(in);
-		} else if (nextCharIsLetter(in)) {				//Identifier
-			Identifier id = readIdentifier(in);
-			if (hmap.containsKey(id)) {
-				temp = hmap.get(id).copy();
-			} else {
-				throw new APException("Unknown Identifier");
-			}
-			
-		} else {
-			throw new APException("Wrong print syntax");
-		}
-		return temp;
-	}
 	
 	private Set<BigInteger> checkExpression(Scanner in) throws APException {
 		Set<BigInteger> temp = checkTerm(in);
@@ -103,22 +77,33 @@ public class Main {
 		return temp;
 	}
 	
-	private void printSet(Set<BigInteger> s) {
-		if (!s.isEmpty()) {
-			out.printf("%s\n", s.print());
+
+	private Set<BigInteger> checkFactor(Scanner in) throws APException {
+		Set<BigInteger> temp = new Set<BigInteger>();
+		skipSpaces(in);
+		if (nextCharIs(in, '{')) {						//Set
+			readChar(in);
+			temp = readSet(in);
+		} else if (nextCharIs(in, '(')) {				//Complex_factor, i.e.: (A+B)
+			readChar(in);
+			temp = checkExpression(in);
+			if (!nextCharIs(in, ')')) {
+				throw new APException("No closing brackets");
+			}
+			readChar(in);
+		} else if (nextCharIsLetter(in)) {				//Identifier
+			Identifier id = readIdentifier(in);
+			if (hmap.containsKey(id)) {
+				temp = hmap.get(id);
+			} else {
+				throw new APException("Unknown Identifier");
+			}
 		} else {
-			out.println();
+			throw new APException("Wrong print syntax");
 		}
+		return temp;
 	}
-	
-	private Identifier readIdentifier(Scanner in) throws APException {
-		String s = "";
-		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
-			s += readChar(in);
-		}
-		return new Identifier(s);
-	}
-	
+
 	private Set<BigInteger> readSet(Scanner in) throws APException {
 		Set<BigInteger> result = new Set<BigInteger>();
 		skipSpaces(in);
@@ -138,7 +123,7 @@ public class Main {
 		readChar(in);
 		return result;
 	}
-	
+
 	private String readNumber(Scanner in) throws APException {
 		String number = "";
 		while (nextCharIsDigit(in)) {
@@ -155,6 +140,16 @@ public class Main {
 		}
 		return number;
 	}
+
+	private Identifier readIdentifier(Scanner in) throws APException {
+		String s = "";
+		while (nextCharIsLetter(in) || nextCharIsDigit(in)) {
+			s += readChar(in);
+		}
+		return new Identifier(s);
+	}
+	
+	
 	
 	private void addNumber(Scanner in, Set<BigInteger> result, String number) throws APException {
 		if (nextCharIsDigit(in)) {
@@ -172,6 +167,7 @@ public class Main {
 			throw new APException("Incorrect character in set");
 		}
 	}
+
 	
 	private void printStatement(Scanner in) throws APException {
 		readChar(in);
@@ -200,6 +196,15 @@ public class Main {
 		}
 	}
 		
+	private void printSet(Set<BigInteger> s) {
+		if (!s.isEmpty()) {
+			out.printf("%s\n", s.print());
+		} else {
+			out.println();
+		}
+	}
+
+	
 	private void start() throws APException {
         Scanner in = new Scanner(System.in);
         hmap = new HashMap<Identifier, Set<BigInteger>>();
